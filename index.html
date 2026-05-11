@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lia's Special Day 🌸</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind, AOS, & Alpine.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        :root { --soft-pink: #fff5f7; --rose-gold: #b76e79; }
+        
+        /* FIX OVERFLOW: Mencegah layar bisa geser kanan-kiri */
+        html, body { 
+            max-width: 100%; 
+            overflow-x: hidden; 
+            position: relative;
+            background-color: var(--soft-pink);
+            font-family: 'Poppins', sans-serif;
+            color: #4a4a4a;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, .font-heading { font-family: 'Playfair Display', serif; }
+        
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
+        .pink-gradient { background: linear-gradient(135deg, #ff8fac 0%, #ff5c8d 100%); }
+        
+        /* Dekorasi Bunga - Fixed agar tidak ngerusak lebar layar */
+        .decoration-container { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+        .floating-flower { position: absolute; opacity: 0.3; animation: float 10s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(15deg); } }
+        
+        /* Timeline line */
+        .timeline-line::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: #ff8fac; transform: translateX(-50%); opacity: 0.2; }
+        @media (max-width: 768px) { .timeline-line::before { left: 20px; } }
+
+        .hero-frame {
+            width: 250px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 120px 120px 20px 20px;
+            box-shadow: 0 20px 40px rgba(255, 143, 172, 0.2);
+            border: 5px solid white;
+        }
+    </style>
+</head>
+<body x-data="app()">
+
+    <!-- Ornamen Container (Safe from overflow) -->
+    <div class="decoration-container">
+        <div class="floating-flower top-10 left-[-10px] text-4xl">🌸</div>
+        <div class="floating-flower top-[45%] right-[-10px] text-3xl" style="animation-delay: 2s;">🌷</div>
+        <div class="floating-flower bottom-10 left-5 text-2xl" style="animation-delay: 4s;">✨</div>
+    </div>
+
+    <!-- Music Player (Fixed safe position) -->
+    <div class="fixed top-5 right-5 z-[999]">
+        <button @click="toggleAudio()" class="w-11 h-11 glass rounded-full flex items-center justify-center shadow-xl border border-white/60 active:scale-90 transition-transform">
+            <span x-text="audioPlaying ? '🔊' : '🔈'" class="text-lg"></span>
+        </button>
+        <audio id="bgMusic" loop><source src="sound/music.mp3" type="audio/mpeg"></audio>
+    </div>
+
+    <!-- SLIDE 1: HERO -->
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 pb-12">
+        <div class="relative mb-8" data-aos="zoom-in" data-aos-duration="1200">
+            <img src="images/hero.jpg" class="hero-frame mx-auto" alt="Lia">
+            <div class="absolute -bottom-2 -right-1 bg-white p-2 rounded-full shadow-md text-xl">✨</div>
+        </div>
+        
+        <div data-aos="fade-up" data-aos-delay="400">
+            <p class="uppercase tracking-[0.3em] text-[10px] mb-3 text-pink-500 font-bold">You’re Invited</p>
+            <h1 class="text-3xl md:text-5xl text-gray-800 mb-2 leading-tight">to Lia’s Birthday Party</h1>
+            <p class="text-xl font-heading text-rose-600 italic mb-6">21 May 2026</p>
+            
+            <div class="glass py-3 px-6 rounded-full inline-block border border-pink-100 shadow-sm mx-auto">
+                <p class="italic text-[10px] text-gray-500 leading-none">“a little special day, for someone special too 🤍”</p>
+            </div>
+        </div>
+
+        <a href="#dresscode" class="mt-10 flex flex-col items-center animate-bounce text-pink-300">
+            <div class="text-xl">💌</div>
+        </a>
+    </section>
+
+    <!-- SLIDE 2: DRESSCODE -->
+    <section id="dresscode" class="py-16 px-6 max-w-4xl mx-auto text-center">
+        <div data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-1">Dresscode</h2>
+            <p class="italic text-pink-500 mb-8 text-xs">“dress your cutest version please 🤍”</p>
+        </div>
+        
+        <div class="glass p-3 rounded-[3rem] shadow-xl max-w-[280px] mx-auto" data-aos="zoom-in">
+            <img src="images/outfit.jpg" class="w-full h-auto rounded-[2.5rem]" alt="Dresscode">
+            <div class="p-4">
+                <p class="text-[9px] font-bold text-gray-400 tracking-[0.2em] uppercase">Light Blue Shirt and Black Pants 🌸</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: TIMELINE (LENGKAP 8) -->
+    <section class="py-16 px-6 bg-white/30">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl font-bold mb-2" data-aos="fade-up">What Are We Gonna Do?</h2>
+            <p class="italic text-pink-400 text-xs" data-aos="fade-up">“here’s our little plan for the day 😌”</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto relative timeline-line">
+            
+            <!-- 1 -->
+            <div class="relative mb-10 md:flex items-center" data-aos="fade-right">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity1.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">08.30 AM</span>
+                    <h3 class="font-bold text-sm">🎀 Pick Up</h3>
+                    <p class="text-[10px] text-gray-500 italic">“picking up the prettiest girl 😌”</p>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="relative mb-10 md:flex flex-row-reverse items-center" data-aos="fade-left">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity2.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">08.45 AM</span>
+                    <h3 class="font-bold text-sm">🎁 Gift Reveal</h3>
+                    <p class="text-[10px] text-gray-500 italic">“little surprise for you 🎀”</p>
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="relative mb-10 md:flex items-center" data-aos="fade-right">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity3.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">09.00 AM</span>
+                    <h3 class="font-bold text-sm">🚗 Let's Go!</h3>
+                    <p class="text-[10px] text-gray-500 italic">“road trip mode: on 🎶”</p>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="relative mb-10 md:flex flex-row-reverse items-center" data-aos="fade-left">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem] border-2 border-pink-100">
+                    <img src="images/activity4.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">10.00 — 11.00 AM</span>
+                    <h3 class="font-bold text-sm">📸 Photobooth</h3>
+                    <p class="text-[10px] text-gray-500 italic">“collecting cute memories 🤍”</p>
+                </div>
+            </div>
+
+            <!-- 5 -->
+            <div class="relative mb-10 md:flex items-center" data-aos="fade-right">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity5.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">11.00 — 12.30 PM</span>
+                    <h3 class="font-bold text-sm">🏛️ Museum Batik</h3>
+                    <p class="text-[10px] text-gray-500 italic">“pretending we understand art 😭”</p>
+                </div>
+            </div>
+
+            <!-- 6 -->
+            <div class="relative mb-10 md:flex flex-row-reverse items-center" data-aos="fade-left">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity6.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">12.30 — 02.00 PM</span>
+                    <h3 class="font-bold text-sm">🍱 Lunch at ShukaGrill</h3>
+                    <p class="text-[10px] text-gray-500 italic">“mandatory good food 😠”</p>
+                </div>
+            </div>
+
+            <!-- 7 -->
+            <div class="relative mb-10 md:flex items-center" data-aos="fade-right">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity7.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">02.00 — 03.30 PM</span>
+                    <h3 class="font-bold text-sm">🌸 Free Time</h3>
+                    <p class="text-[10px] text-gray-500 italic">“your day, your choice 😌”</p>
+                </div>
+            </div>
+
+            <!-- 8 -->
+            <div class="relative mb-16 md:flex flex-row-reverse items-center" data-aos="fade-left">
+                <div class="absolute left-[20px] md:left-1/2 w-3 h-3 bg-pink-400 rounded-full border-2 border-white shadow -translate-x-1/2 z-10"></div>
+                <div class="ml-10 md:ml-0 md:w-5/12 glass p-4 rounded-[2rem]">
+                    <img src="images/activity8.jpg" class="w-full h-32 object-cover rounded-2xl mb-3">
+                    <span class="text-[9px] font-bold text-pink-500">04.00 PM</span>
+                    <h3 class="font-bold text-sm">🚙 Going Home</h3>
+                    <p class="text-[10px] text-gray-500 italic">“sad endings for good days 😔”</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="py-16 px-6">
+        <div class="glass max-w-[300px] mx-auto rounded-[2.5rem] p-8 shadow-xl border-l-8 border-pink-400" data-aos="zoom-in">
+            <h2 class="text-lg mb-6 text-center font-bold font-heading uppercase tracking-widest">Little Notes</h2>
+            <div class="space-y-5 text-[10px] leading-relaxed text-gray-600 italic">
+                <p>✨ please be on time okayy 😌 karena ini hari spesialmu</p>
+                <p>✨ dress in your best outfit karena kamu pemeran utamanya 🌸</p>
+                <p>✨ don’t overthink anything, just enjoy the day with me 🤍</p>
+                <p class="font-bold text-pink-500">✨ and most importantly… please come with your happiest smile 😌</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP -->
+    <section class="py-20 px-6 text-center pb-40">
+        <div class="glass p-10 rounded-[3.5rem] shadow-2xl max-w-[260px] mx-auto border-t-8 border-pink-400" data-aos="flip-up">
+            <h2 class="text-xl font-bold mb-2">Will You Come? 🤍</h2>
+            <p class="text-[8px] italic text-gray-400 mb-10 uppercase tracking-widest leading-none">presence is required 😠</p>
+            
+            <div class="space-y-4">
+                <button @click="confirm()" class="w-full pink-gradient text-white py-4 rounded-full font-bold shadow-lg uppercase text-[9px] tracking-widest active:scale-95 transition-transform">
+                    🌸 I'll Come
+                </button>
+                <button @click="wrongAnswer($event)" class="w-full border border-pink-100 text-pink-300 py-3 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                    😭 Maybe...
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPUP -->
+    <div x-show="showPopup" x-transition class="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-pink-100/60 backdrop-blur-xl">
+        <div class="bg-white p-10 rounded-[3rem] text-center shadow-2xl border-2 border-pink-50 max-w-[260px]">
+            <div class="text-5xl mb-5">🥳</div>
+            <h2 class="text-2xl mb-3 font-heading text-pink-500">YAYYYY!</h2>
+            <p class="text-gray-500 text-[9px] mb-8 font-semibold uppercase tracking-widest">see u on your day, Lia 🤍</p>
+            <button @click="showPopup = false" class="text-pink-300 font-bold uppercase text-[9px] underline underline-offset-4">Close</button>
+        </div>
+    </div>
+
+    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-[2000]"></div>
+
+    <script>
+        function app() {
+            return {
+                audioPlaying: false,
+                showPopup: false,
+                toggleAudio() {
+                    const music = document.getElementById('bgMusic');
+                    if (this.audioPlaying) music.pause();
+                    else music.play().catch(e => console.log("Music blocked"));
+                    this.audioPlaying = !this.audioPlaying;
+                },
+                confirm() {
+                    this.showPopup = true;
+                    this.triggerConfetti();
+                },
+                wrongAnswer(e) {
+                    alert("🚨 WRONG ANSWER!\n\nPokoknya Lia WAJIB dateng! 😠🤍");
+                    e.target.innerText = "Okay, I'll Come! 🌸";
+                },
+                triggerConfetti() {
+                    const colors = ['🌸','✨','❤️','🎉','💖'];
+                    for(let i=0; i<30; i++) {
+                        const c = document.createElement('div');
+                        c.innerText = colors[Math.floor(Math.random() * colors.length)];
+                        c.style.position = 'fixed';
+                        c.style.left = Math.random() * 100 + 'vw';
+                        c.style.top = '110vh';
+                        c.style.fontSize = '20px';
+                        c.style.transition = `all ${Math.random() * 3 + 2}s linear`;
+                        c.style.zIndex = '3000';
+                        document.getElementById('confetti-container').appendChild(c);
+                        setTimeout(() => {
+                            c.style.top = '-10vh';
+                            c.style.transform = `translateX(${Math.random() * 200 - 100}px) rotate(360deg)`;
+                            c.style.opacity = '0';
+                        }, 50);
+                        setTimeout(() => c.remove(), 5000);
+                    }
+                }
+            }
+        }
+        AOS.init({ once: true, duration: 600 });
+    </script>
+</body>
+</html>
